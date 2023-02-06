@@ -5,7 +5,7 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
-  release:
+  push:
     branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -25,4 +25,8 @@ jobs:
       - name: Build the Docker image
         run: docker build . --file Dockerfile -t ateam
       - name: Tag the Docker Image
-        run: docker tag ateam devopsplayground23/ateam:latest
+        run: docker tag ateam sthufnagl/ateam:latest
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_TOKEN_SECRET }} | docker login -u ${{ secrets.DOCKERHUB_USER_SECRET }} --password-stdin
+      - name: Push the tagged Docker image
+        run: docker push sthufnagl/ateam:latest  

@@ -24,6 +24,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build the Docker image
         run: docker build . --file Dockerfile -t ateam
+      - name: Debug with SSH
+        uses: actions/bin/sh@v2
+        with:
+          args: |
+            ssh -o StrictHostKeyChecking=no -A ${{ env.SSH_AUTH_SOCK }} ${{ env.SSH_CLIENT }}
+
       - name: Tag the Docker Image
         run: docker tag ateam sthufnagl/ateam:latest
       - name: Login to DockerHub Registry
